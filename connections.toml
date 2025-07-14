@@ -1,7 +1,0 @@
-[snowflake_dev]
-SF_ACCOUNT = "pcc86203.us-east-1"
-SF_USERNAME = "tyagibhawna"
-SF_PASSWORD = "SuperBowl@2025"
-SF_ROLE = "ACCOUNTADMIN"
-SF_WAREHOUSE = "COMPUTE_WH"
-SF_DATABASE = "EMP"
