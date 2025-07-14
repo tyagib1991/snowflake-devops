@@ -25,6 +25,20 @@ jobs:
         run: ls -l $GITHUB_WORKSPACE
 
       - name: Run schemachange
+        env:
+          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_ROLE: ${{ secrets.SF_ROLE }}
+          SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+          SF_DATABASE: ${{ secrets.SF_DATABASE }}
         run: |
           pip install schemachange
-          schemachange -f $GITHUB_WORKSPACE/deploy --config-folder $GITHUB_WORKSPACE --connection-name snowflake_dev -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+          echo "Checking config folder contents:"
+          ls -la $GITHUB_WORKSPACE
+          schemachange -f $GITHUB_WORKSPACE/deploy \
+            --config-folder $GITHUB_WORKSPACE \
+            --config-file-name connections.toml \
+            --connection-name snowflake_dev \
+            -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY \
+            --create-change-history-table
