@@ -24,4 +24,4 @@ jobs:
       - name: Run schemachange
         run: |
           pip install schemachange
-          schemachange -f $GITHUB_WORKSPACE/deploy --connection snowflake_dev --config-folder $GITHUB_WORKSPACE -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+          schemachange -f $GITHUB_WORKSPACE/deploy --config-folder $GITHUB_WORKSPACE --connection-name snowflake_dev -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
