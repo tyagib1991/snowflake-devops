@@ -1,0 +1,7 @@
+[snowflake_dev]
+account = "pcc86203.us-east-1"
+user = "tyagibhawna"
+password = "SuperBowl@2025"
+role = "ACCOUNTADMIN"
+warehouse = "COMPUTE_WH"
+database = "EMP"
