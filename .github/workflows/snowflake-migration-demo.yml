@@ -21,19 +21,19 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Run schemachange
-        env:
-          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SF_USERNAME: ${{ secrets.SF_USERNAME }}
-          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SF_ROLE: ${{ secrets.SF_ROLE }}
-          SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SF_DATABASE: ${{ secrets.SF_DATABASE }}
+      - name: Create connections.toml
         run: |
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          python --version
-          echo "Step 1: Installing schemachange"
-          pip install schemachange
+          cat <<EOF > deploy/connections.toml
+          [snowflake_dev]
+          account = "${{ secrets.SF_ACCOUNT }}"
+          user = "${{ secrets.SF_USERNAME }}"
+          password = "${{ secrets.SF_PASSWORD }}"
+          role = "${{ secrets.SF_ROLE }}"
+          warehouse = "${{ secrets.SF_WAREHOUSE }}"
+          database = "${{ secrets.SF_DATABASE }}"
+          EOF
 
-          echo "Step 2: Running schemachange"
-          schemachange -f $GITHUB_WORKSPACE/deploy -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+      - name: Run schemachange
+        run: |
+          pip install schemachange
+          schemachange -f $GITHUB_WORKSPACE/deploy --connection snowflake_dev -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
