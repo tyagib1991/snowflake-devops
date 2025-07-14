@@ -21,6 +21,9 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: List files in workspace
+        run: ls -l $GITHUB_WORKSPACE
+
       - name: Run schemachange
         run: |
           pip install schemachange
