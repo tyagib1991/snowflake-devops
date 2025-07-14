@@ -24,6 +24,18 @@ jobs:
       - name: List files in workspace
         run: ls -l $GITHUB_WORKSPACE
 
+      - name: Create connections.toml
+        run: |
+          cat > $GITHUB_WORKSPACE/connections.toml << EOF
+          [snowflake_dev]
+          account = "${{ secrets.SF_ACCOUNT }}"
+          user = "${{ secrets.SF_USERNAME }}"
+          password = "${{ secrets.SF_PASSWORD }}"
+          role = "${{ secrets.SF_ROLE }}"
+          warehouse = "${{ secrets.SF_WAREHOUSE }}"
+          database = "${{ secrets.SF_DATABASE }}"
+          EOF
+          
       - name: Run schemachange
         run: |
           pip install schemachange
@@ -32,6 +44,10 @@ jobs:
           cat $GITHUB_WORKSPACE/connections.toml
           schemachange -f $GITHUB_WORKSPACE/deploy \
             --config-folder $GITHUB_WORKSPACE \
+            --config-file-name connections.toml \
+            --connection-name snowflake_dev \
+            -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY \
+            --create-change-history-table
             --config-file-name connections.toml \
             --connection-name snowflake_dev \
             -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY \
