@@ -33,10 +33,15 @@ jobs:
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
         run: |
-          pip install snowflake-connector-python==3.15.0
-          pip install schemachange
+          python -m pip install --upgrade pip
+          pip install "snowflake-connector-python==3.15.0" --no-cache-dir
+          pip install "schemachange==4.0.1"
           schemachange deploy \
             -f $GITHUB_WORKSPACE/deploy \
+            --config-folder $GITHUB_WORKSPACE \
+            --connection-name snowflake_dev \
+            -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
+            --create-change-history-table
             --config-folder $GITHUB_WORKSPACE \
             --connection-name snowflake_dev \
             -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
