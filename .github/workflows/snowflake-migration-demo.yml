@@ -21,19 +21,7 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Create connections.toml
-        run: |
-          cat <<EOF > deploy/connections.toml
-          [snowflake_dev]
-          account = "${{ secrets.SF_ACCOUNT }}"
-          user = "${{ secrets.SF_USERNAME }}"
-          password = "${{ secrets.SF_PASSWORD }}"
-          role = "${{ secrets.SF_ROLE }}"
-          warehouse = "${{ secrets.SF_WAREHOUSE }}"
-          database = "${{ secrets.SF_DATABASE }}"
-          EOF
-
       - name: Run schemachange
         run: |
           pip install schemachange
-          schemachange -f $GITHUB_WORKSPACE/deploy --connection snowflake_dev -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+          schemachange -f $GITHUB_WORKSPACE/deploy --connection snowflake_dev --config-folder $GITHUB_WORKSPACE -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
