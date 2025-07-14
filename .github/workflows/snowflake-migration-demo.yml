@@ -26,24 +26,20 @@ jobs:
 
       - name: Run schemachange
         env:
-          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SF_USERNAME: ${{ secrets.SF_USERNAME }}
-          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SF_ROLE: ${{ secrets.SF_ROLE }}
-          SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SF_DATABASE: ${{ secrets.SF_DATABASE }}
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
         run: |
           pip install schemachange
-          schemachange -f $GITHUB_WORKSPACE/deploy \
-            -a $SF_ACCOUNT \
-            -u $SF_USERNAME \
-            -p $SF_PASSWORD \
-            -r $SF_ROLE \
-            -w $SF_WAREHOUSE \
-            -d $SF_DATABASE \
-            -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
-            --create-change-history-table
-            --config-file-name connections.toml \
-            --connection-name snowflake_dev \
-            -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY \
+          schemachange deploy \
+            -f $GITHUB_WORKSPACE/deploy \
+            -a $SNOWFLAKE_ACCOUNT \
+            -u $SNOWFLAKE_USER \
+            -r $SNOWFLAKE_ROLE \
+            -w $SNOWFLAKE_WAREHOUSE \
+            -d $SNOWFLAKE_DATABASE \
+            -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
             --create-change-history-table
